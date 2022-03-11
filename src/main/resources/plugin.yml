@@ -1,0 +1,8 @@
+name: DellunaBus
+version: ${project.version}
+main: me.lewin.dellunabus.Main
+api-version: 1.18
+commands:
+  bus:
+    description: Delluna Bus system.
+    usage: /bus
