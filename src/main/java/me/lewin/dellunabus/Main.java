@@ -31,6 +31,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BusTitleSetGUI(), this);
         Bukkit.getPluginManager().registerEvents(new BusIconSetGUI(), this);
         Bukkit.getPluginManager().registerEvents(new BusPayManagerGUI(), this);
+        Bukkit.getPluginManager().registerEvents(new BusMapManagerGUI(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDataFile(), this);
     }
 }

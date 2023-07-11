@@ -1,6 +1,7 @@
 package me.lewin.dellunabus.npc;
 
 import me.lewin.dellunabus.DataFile.BusDataFile;
+import me.lewin.dellunabus.function.BusMap;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.Gravity;
@@ -23,6 +24,10 @@ public class BusNPC {
         npc.getOrAddTrait(Gravity.class).gravitate(true);
 
         npc.spawn(player.getLocation());
+
+        // DynMap 마커 추가 [Dang_Di, 2023.06.26]
+        // 수정 [Dang_Di, 2023.07.11]
+        BusMap.createMarker(config.getInt("npcID"), npcName, player, null);
     }
 
     public static void removeNPC(String npcName, Player player){
@@ -36,5 +41,8 @@ public class BusNPC {
         NPC npc = CitizensAPI.getNPCRegistry().getById(config.getInt("npcID"));
 
         npc.destroy();
+
+        // DynMap 마커 제거 [Dang_Di, 2023.06.26]
+        BusMap.removeMarker(config.getInt("npcID"), player);
     }
 }
