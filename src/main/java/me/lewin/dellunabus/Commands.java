@@ -1,6 +1,7 @@
 package me.lewin.dellunabus;
 
 import me.lewin.dellunabus.function.BusCommandReload;
+import me.lewin.dellunabus.gui.BusMapManagerGUI;
 import me.lewin.dellunabus.gui.BusPayManagerGUI;
 import me.lewin.dellunabus.gui.BusStationManagerGUI;
 import org.bukkit.command.Command;
@@ -31,6 +32,9 @@ public class Commands implements CommandExecutor {
                 break;
             case "pay":
                 player.openInventory(new BusPayManagerGUI().getInventory());
+                break;
+            case "map":
+                player.openInventory(new BusMapManagerGUI().getInventory());
                 break;
         }
         return true;
