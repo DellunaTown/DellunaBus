@@ -71,6 +71,8 @@ public class BusCreateGUI implements Listener {
                             }
                             break;
                         case 2:
+                        case 3:
+                        case 4:
                             for (ItemStack item : player.getInventory().getContents()){
                                 if (item == null) { continue; }
                                 if (isSilver(item) && item.getAmount() >= 30){
@@ -80,8 +82,8 @@ public class BusCreateGUI implements Listener {
                                 }
                             }
                             break;
-                        case 3:
-                            player.sendMessage("1인당 버스정류장 설치 제한은 최대 3개입니다.");
+                        case 5:
+                            player.sendMessage("1인당 버스정류장 설치 제한은 최대 5개입니다.");
                             return;
                         default:
                             player.sendMessage("버스 설치 개수 데이터베이스 기록 오류입니다. 관리자에게 문의해주세요");
