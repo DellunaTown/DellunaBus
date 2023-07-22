@@ -3,6 +3,7 @@ package me.lewin.dellunabus.gui;
 import me.lewin.dellunabus.DataFile.BusDataFile;
 import me.lewin.dellunabus.DataFile.BusStationDataFile;
 import me.lewin.dellunabus.IconDefault;
+import me.lewin.dellunabus.function.BusMap;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
@@ -112,6 +113,10 @@ public class BusNameSetGUI implements Listener {
 
                     NPC npc = CitizensAPI.getNPCRegistry().getById(busConfig.getInt("npcID"));
                     npc.setName(name);
+
+                    // DynMap 마커 이름 수정 (제거 후 생성) [Dang_Di, 2023.07.11]
+                    BusMap.removeMarker(busConfig.getInt("npcID"), player);
+                    BusMap.createMarker(busConfig.getInt("npcID"), name, player, npc);
 
                     player.sendMessage("변경되었습니다.");
 
