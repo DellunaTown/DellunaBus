@@ -22,13 +22,17 @@ public class BusSettingGUI implements Listener {
     public Inventory getInventory(String name){
         Inventory inv = Bukkit.getServer().createInventory(null, 9, "§x§0§0§b§3§b§6       ˚₊· Delluna Bus Set ₊·§1");
 
-        inv.setItem(1, nameSet());
-        inv.setItem(2, iconSet());
-        inv.setItem(3, textSet());
+        inv.setItem(0, nameSet());
+        inv.setItem(1, iconSet());
+        inv.setItem(2, textSet());
 
-        inv.setItem(5, pay(name));
-        inv.setItem(7, remove());
-        inv.setItem(8, iconName(name));
+        // NPC 위치 변경, 버스 스킨 변경 추가 [Dang_Di, 2023.07.21]
+        inv.setItem(3, locationSet());
+        inv.setItem(4, skinSet());
+
+        inv.setItem(6, pay(name));
+        inv.setItem(7, iconName(name));
+        inv.setItem(8, remove());
 
         for (int i = 0; i < inv.getSize(); i++) {
             if (inv.getItem(i) == null)
@@ -50,6 +54,12 @@ public class BusSettingGUI implements Listener {
     }
     private ItemStack textSet(){
         return IconDefault.iconDefault(Material.OAK_SIGN, "버스 문구 설정");
+    }
+    private ItemStack locationSet(){
+        return IconDefault.iconDefault(Material.COMPASS, "버스 위치 변경");
+    }
+    private ItemStack skinSet(){
+        return IconDefault.iconDefault(Material.ARMOR_STAND, "버스 스킨 변경");
     }
     private ItemStack remove(){
         List<String> lore = new ArrayList<>();
@@ -73,17 +83,23 @@ public class BusSettingGUI implements Listener {
             if (event.getClickedInventory() == event.getView().getBottomInventory()) return;
             if (event.getCurrentItem() == null) return;
 
-            String name = event.getInventory().getItem(8).getItemMeta().getDisplayName();
+            String name = event.getInventory().getItem(7).getItemMeta().getDisplayName();
 
             switch ((event.getCurrentItem()).getType()) {
                 case NAME_TAG:
                     player.openInventory(new BusNameSetGUI().getInventory(name));
                     break;
+                case PLAYER_HEAD:
+                    player.openInventory(new BusIconSetGUI().getInventory(name));
+                    break;
                 case OAK_SIGN:
                     player.openInventory(new BusTitleSetGUI().getInventory(name));
                     break;
-                case PLAYER_HEAD:
-                    player.openInventory(new BusIconSetGUI().getInventory(name));
+                case COMPASS:
+                    player.openInventory(new BusLocationUpdateGUI().getInventory(name));
+                    break;
+                case ARMOR_STAND:
+                    player.openInventory(new BusSkinSetGUI().getInventory(name));
                     break;
                 case LIME_WOOL:
                     player.sendMessage("이미 연장하셨습니다.");
@@ -97,9 +113,8 @@ public class BusSettingGUI implements Listener {
                     BusNPC.removeNPC(name, player);
                     BusDataFile.removeDataFile(name);
                     player.closeInventory();
-                    return;
+                    break;
             }
-            return;
         }
     }
 }

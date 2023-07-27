@@ -86,7 +86,7 @@ public class BusCreateGUI implements Listener {
                             player.sendMessage("1인당 버스정류장 설치 제한은 최대 5개입니다.");
                             return;
                         default:
-                            player.sendMessage("버스 설치 개수 데이터베이스 기록 오류입니다. 관리자에게 문의해주세요");
+                            player.sendMessage("버스 설치 개수 데이터베이스 기록 오류입니다. 관리자에게 문의해 주세요");
                             return;
                     }
 
@@ -104,7 +104,6 @@ public class BusCreateGUI implements Listener {
                     BusNPC.createNPC(busName, player);
 
                     player.closeInventory();
-                    return;
             }
         }
     }
