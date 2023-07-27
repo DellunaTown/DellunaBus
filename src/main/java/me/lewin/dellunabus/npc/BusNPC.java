@@ -3,7 +3,9 @@ package me.lewin.dellunabus.npc;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.lewin.dellunabus.DataFile.BusDataFile;
+import me.lewin.dellunabus.DataFile.BusStationDataFile;
 import me.lewin.dellunabus.function.BusMap;
+import me.lewin.dellunabus.function.SetCloseStation;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.trait.Gravity;
@@ -15,8 +17,10 @@ import org.bukkit.entity.Player;
 
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.List;
 
 public class BusNPC {
+    // NPC 생성
     public static void createNPC(String npcName, Player player) {
         try {
             NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.PLAYER, npcName);
@@ -37,7 +41,7 @@ public class BusNPC {
                 npc.getOrAddTrait(SkinTrait.class).clearTexture();
                 npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(npcName, signature, metadata);
             } else {
-                player.sendMessage("정류장 NPC 생성에 실패했습니다. 관리자에게 문의해주세요.");
+                player.sendMessage("정류장 NPC 생성에 실패했습니다. 관리자에게 문의해 주세요.");
                 return;
             }
             // ===========================================================================
@@ -52,11 +56,12 @@ public class BusNPC {
         }
         catch (Exception e)
         {
-            player.sendMessage("정류장 NPC 생성에 실패했습니다. 관리자에게 문의해주세요.");
+            player.sendMessage("정류장 NPC 생성에 실패했습니다. 관리자에게 문의해 주세요.");
             e.printStackTrace();
         }
     }
 
+    // NPC 제거
     public static void removeNPC(String npcName, Player player){
         FileConfiguration config = BusDataFile.getConfig(npcName);
 
@@ -73,6 +78,59 @@ public class BusNPC {
         BusMap.removeMarker(config.getInt("npcID"), player);
     }
 
+    // NPC 위치 변경
+    public static boolean updateNPCLocation(int npcID, Player player, FileConfiguration config, String npcName){
+        try
+        {
+            NPC npc = CitizensAPI.getNPCRegistry().getById(npcID);
+
+            npc.despawn();
+            npc.spawn(player.getLocation());
+
+            // 데이터파일, DynMap에 저장된 위치 변경 -----------------------------------------
+            // 기차역 데이터 파일 수정
+            String station = SetCloseStation.setStation(player.getLocation());
+
+            // 정류장 NPC가 이동하여 속해있는 기차역이 기존과 달라질 경우
+            boolean isUpdate = false;
+            if (!config.getString("station").equals(station)) {
+                String oldStation = config.getString("station");    // 기존 기차역
+                isUpdate = true;
+
+                // 기존에 속했던 기차역 파일 list 수정 (정류장 삭제)
+                FileConfiguration oldStationConfig = BusStationDataFile.getConfig(oldStation);
+                List<String> oldList = oldStationConfig.getStringList("list");
+                oldList.remove(npcName);
+                oldStationConfig.set("list", oldList);
+                BusStationDataFile.saveDataFile(oldStationConfig, BusStationDataFile.getDataFile(oldStation));
+
+                // 새로 속하게된 기차역 파일 list 수정 (정류장 추가)
+                FileConfiguration newStationConfig = BusStationDataFile.getConfig(station);
+                List<String> newList = newStationConfig.getStringList("list");
+                newList.add(npcName);
+                newStationConfig.set("list", newList);
+                BusStationDataFile.saveDataFile(newStationConfig, BusStationDataFile.getDataFile(station));
+            }
+
+            // 버스 데이터 파일 수정
+            config.set("location", player.getLocation());
+            if (isUpdate) {
+                config.set("station", station);
+            }
+            BusDataFile.saveDataFile(config, BusDataFile.getDataFile(npcName));
+
+            // DynMap 마커
+            BusMap.removeMarker(config.getInt("npcID"), player);
+            BusMap.createMarker(config.getInt("npcID"), npcName, player, null);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // NPC 스킨 변경
     public static void updateNPC(String npcName, Player player) {
         try
         {
@@ -95,7 +153,7 @@ public class BusNPC {
                 npc.getOrAddTrait(SkinTrait.class).clearTexture();
                 npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(npcName, signature, metadata);
             } else {
-                player.sendMessage("정류장 NPC 스킨 변경에 실패했습니다. 관리자에게 문의해주세요.");
+                player.sendMessage("정류장 NPC 스킨 변경에 실패했습니다. 관리자에게 문의해 주세요.");
                 return;
             }
             npc.getOrAddTrait(LookClose.class).lookClose(true);
@@ -106,11 +164,12 @@ public class BusNPC {
         }
         catch (Exception e)
         {
-            player.sendMessage("정류장 NPC 스킨 변경에 실패했습니다. 관리자에게 문의해주세요.");
+            player.sendMessage("정류장 NPC 스킨 변경에 실패했습니다. 관리자에게 문의해 주세요.");
             e.printStackTrace();
         }
     }
 
+    // 플레이어 Profile에서 스킨 파싱
     public static JsonObject getGameProfile(String uuid, Player player, String msg) {
         try
         {
@@ -122,13 +181,11 @@ public class BusNPC {
         }
         catch (Exception e)
         {
-            player.sendMessage(msg + "에 실패했습니다. 관리자에게 문의해주세요.");
+            player.sendMessage(msg + "에 실패했습니다. 관리자에게 문의해 주세요.");
             e.printStackTrace();
 
             return null;
         }
 
     }
-
-
 }

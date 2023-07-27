@@ -26,7 +26,7 @@ public class BusSettingGUI implements Listener {
         inv.setItem(1, iconSet());
         inv.setItem(2, textSet());
 
-        // NPC 이동, 버스 스킨 변경 추가 [Dang_Di, 2023.07.21]
+        // NPC 위치 변경, 버스 스킨 변경 추가 [Dang_Di, 2023.07.21]
         inv.setItem(3, locationSet());
         inv.setItem(4, skinSet());
 
@@ -56,7 +56,7 @@ public class BusSettingGUI implements Listener {
         return IconDefault.iconDefault(Material.OAK_SIGN, "버스 문구 설정");
     }
     private ItemStack locationSet(){
-        return IconDefault.iconDefault(Material.COMPASS, "NPC 이동");
+        return IconDefault.iconDefault(Material.COMPASS, "버스 위치 변경");
     }
     private ItemStack skinSet(){
         return IconDefault.iconDefault(Material.ARMOR_STAND, "버스 스킨 변경");
@@ -96,7 +96,7 @@ public class BusSettingGUI implements Listener {
                     player.openInventory(new BusTitleSetGUI().getInventory(name));
                     break;
                 case COMPASS:
-                    //player.openInventory(new BusLocationSetGUI().getInventory(name));
+                    player.openInventory(new BusLocationUpdateGUI().getInventory(name));
                     break;
                 case ARMOR_STAND:
                     player.openInventory(new BusSkinSetGUI().getInventory(name));
@@ -113,9 +113,8 @@ public class BusSettingGUI implements Listener {
                     BusNPC.removeNPC(name, player);
                     BusDataFile.removeDataFile(name);
                     player.closeInventory();
-                    return;
+                    break;
             }
-            return;
         }
     }
 }

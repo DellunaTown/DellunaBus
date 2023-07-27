@@ -1,7 +1,7 @@
 package me.lewin.dellunabus;
 
 import me.lewin.dellunabus.DataFile.PlayerDataFile;
-import me.lewin.dellunabus.function.BusCreateTicketClickEvent;
+import me.lewin.dellunabus.function.*;
 import me.lewin.dellunabus.gui.*;
 import me.lewin.dellunabus.npc.NPCClickEvent;
 import org.bukkit.Bukkit;
@@ -22,6 +22,7 @@ public final class Main extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new NPCClickEvent(), this);
         Bukkit.getPluginManager().registerEvents(new BusCreateTicketClickEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new BusLocationTicketClickEvent(), this);
         Bukkit.getPluginManager().registerEvents(new BusCreateGUI(), this);
         Bukkit.getPluginManager().registerEvents(new BusStationManagerGUI(), this);
         Bukkit.getPluginManager().registerEvents(new BusStopManagerGUI(), this);
@@ -33,6 +34,7 @@ public final class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new BusPayManagerGUI(), this);
         Bukkit.getPluginManager().registerEvents(new BusMapManagerGUI(), this);
         Bukkit.getPluginManager().registerEvents(new BusSkinSetGUI(), this);
+        Bukkit.getPluginManager().registerEvents(new BusLocationUpdateGUI(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDataFile(), this);
     }
 }

@@ -104,6 +104,7 @@ public class BusNameSetGUI implements Listener {
                     FileConfiguration busConfig = BusDataFile.getConfig(npcName);
                     BusDataFile.saveDataFile(busConfig, BusDataFile.getDataFile(name));
                     BusDataFile.getDataFile(npcName).delete();
+
                     FileConfiguration stationConfig = BusStationDataFile.getConfig(busConfig.getString("station"));
                     List<String> list = stationConfig.getStringList("list");
                     Integer index = list.indexOf(npcName);
