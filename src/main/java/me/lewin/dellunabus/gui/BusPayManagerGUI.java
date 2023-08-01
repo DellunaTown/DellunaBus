@@ -2,6 +2,7 @@ package me.lewin.dellunabus.gui;
 
 import me.lewin.dellunabus.DataFile.BusPayDataFile;
 import me.lewin.dellunabus.IconDefault;
+import me.lewin.dellunabus.function.BusIdCompare;
 import me.lewin.dellunabus.function.BusPay;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -18,10 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BusPayManagerGUI implements Listener {
-    public Inventory getInventory(){
+    public Inventory getInventory() {
         Inventory inv = Bukkit.getServer().createInventory(null, 9, "§x§0§0§b§3§b§6Bus Pay 관리 페이지");
 
         inv.setItem(2, busIcon());
+
+        inv.setItem(4, compareIcon());
 
         inv.setItem(6, resetIcon());
 
@@ -33,16 +36,22 @@ public class BusPayManagerGUI implements Listener {
         return inv;
     }
 
-    private ItemStack busIcon(){
+    private ItemStack busIcon() {
         List<String> lore = new ArrayList<>();
         lore.add("§7 쉬프트+좌클릭");
         return IconDefault.iconDefault(Material.DIAMOND, "미연장 버스 삭제", lore);
     }
 
-    private ItemStack resetIcon(){
+    private ItemStack resetIcon() {
         List<String> lore = new ArrayList<>();
         lore.add("§7 마지막 리셋 날짜 : " + BusPayDataFile.getConfig().getString("date"));
         return IconDefault.iconDefault(Material.REDSTONE, "버스 리셋", lore);
+    }
+
+    private ItemStack compareIcon() {
+        List<String> lore = new ArrayList<>();
+        lore.add("§7 시티즌 플러그인의 NPC ID, 정류장 데이터의 NPC ID 디버그");
+        return IconDefault.iconDefault(Material.EMERALD, "NPC ID 디버그", lore);
     }
 
     @EventHandler
@@ -60,7 +69,7 @@ public class BusPayManagerGUI implements Listener {
                     BusPay.remove(player);
                     break;
                 case REDSTONE:
-                    if (!(BusPayDataFile.getDataFile().canRead())){
+                    if (!(BusPayDataFile.getDataFile().canRead())) {
                         BusPayDataFile.creatDataFile();
                     }
                     BusPay.resetPay(player);
@@ -69,8 +78,14 @@ public class BusPayManagerGUI implements Listener {
                     BusPayDataFile.saveDataFile(payconfig, BusPayDataFile.getDataFile());
                     player.openInventory(new BusPayManagerGUI().getInventory());
                     break;
+
+                case EMERALD:
+                    if (!(BusIdCompare.getDataFile().canRead())) {
+                        BusIdCompare.creatDataFile();
+                    }
+                    BusIdCompare.idCompare(player);
+                    break;
             }
-            return;
         }
     }
 }
