@@ -39,8 +39,11 @@ public class BusIconSetGUI implements Listener {
     private void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().contains("§x§0§0§b§3§b§6        ˚₊· Delluna   Bus  ₊·§c")) {
+            event.setCancelled(true);
 
+            if (event.getClickedInventory() == event.getView().getBottomInventory()) return;
             if (event.getCurrentItem() == null) return;
+
             String name = event.getInventory().getItem(0).getItemMeta().getDisplayName();
 
             switch ((event.getCurrentItem()).getType()) {
