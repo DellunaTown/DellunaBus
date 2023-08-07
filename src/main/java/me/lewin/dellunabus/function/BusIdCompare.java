@@ -33,6 +33,7 @@ public class BusIdCompare {
                 if (npc == null) {
                     String busName = file.getName().substring(0, file.getName().length() - 4);
                     errList.add(busName);
+                    player.sendMessage(busName);
 
                     cnt++;
                 }
@@ -42,7 +43,7 @@ public class BusIdCompare {
             listConfig.set("errNpcList", errList);
             saveDataFile(listConfig, getDataFile());
 
-            player.sendMessage(cnt + " 개 발견");
+            player.sendMessage("ID가 다른 데이터 " + cnt + " 개 발견");
             // -------------------------------------------------------------------
 
 
@@ -63,7 +64,16 @@ public class BusIdCompare {
             }
 
             player.sendMessage(cnt + " 개의 버스 정류장 데이터 파일의 NPC ID를 갱신했습니다.");
-            player.sendMessage("웹 맵은 /bus map 명령어로 직접 갱신해주세요!!");
+
+            if (cnt > 0) {
+                player.sendMessage("웹 맵은 /bus map 명령어로 직접 갱신해주시고");
+                player.sendMessage("디버그를 한 번 더 진행해 ID가 다른 데이터 개수를 확인해 주세요.");
+                player.sendMessage("데이터 개수가 0개일 경우에만 미연장 버스 삭제를 진행해주세요.");
+            }
+
+            if (cnt == 0)
+                player.sendMessage("미연장 버스 삭제를 진행해도 좋습니다.");
+
             // -------------------------------------------------------------------
 
         }
