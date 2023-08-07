@@ -16,26 +16,7 @@ import java.io.*;
 
 public class BusMap {
 
-    // static LinkedHashMap<String, LinkedHashMap> dynMap = new LinkedHashMap<String, LinkedHashMap>();           // dynMap 데이터 전문
-    // static LinkedHashMap<String, LinkedHashMap> setsMap = new LinkedHashMap<String, LinkedHashMap>();          // dynMap 데이터의 sets
-    // static LinkedHashMap<String, LinkedHashMap> busSetMap = new LinkedHashMap<String, LinkedHashMap>();        // sets 데이터의 busSet
-    // public static File busFile;
     public static final DynmapAPI DYNMAP_API  = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("dynmap");
-
-    // Method ===============================================================
-
-    // 데이터 갱신
-    //public static void initData() throws FileNotFoundException {
-    //    busFile = getDynMapDataFile();
-        // dynMap = new Yaml().load(new FileReader(busFile));
-        // setsMap = dynMap.get("sets");
-        // busSetMap = setsMap.get("busSet");
-    //}
-
-    // DynMap 데이터 불러오기
-    //public static File getDynMapDataFile() {
-    //    return new File("plugins\\dynmap", "markers.yml");
-    //}
 
     // busSet 반환
     public static MarkerSet getBusMarkerSet() {
@@ -170,13 +151,11 @@ public class BusMap {
 
             e.printStackTrace();
         }
-
-        //player.sendMessage("버스정류장 마커를 모두 제거했습니다. 웹지도에는 새로고침 후 적용됩니다.");
     }
 
     // 버스정류장 생성시 마커 생성
     // 마커 이름을 수정하려는 경우를 제외하고, 마지막 파라미터는 null로 받습니다. [Dang_Di, 2023.07.11]
-    public static void createMarker(int npcID, String npcName, Player player, NPC npc) {
+    public static synchronized void createMarker(int npcID, String npcName, Player player, NPC npc) {
         try
         {
             /*
@@ -242,7 +221,7 @@ public class BusMap {
 
 
     // 버스정류장 제거시 마커 제거
-    public static void removeMarker(int npcID, Player player) {
+    public static synchronized void removeMarker(int npcID, Player player) {
         try
         {
             /*
