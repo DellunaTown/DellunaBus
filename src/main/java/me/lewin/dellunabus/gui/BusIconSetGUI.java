@@ -32,17 +32,19 @@ public class BusIconSetGUI implements Listener {
         return inv;
     }
     private ItemStack nameIcon(String name){
-        return IconDefault.iconDefault(Material.WHITE_STAINED_GLASS_PANE, name);
+        return IconDefault.iconDefault(Material.WHITE_STAINED_GLASS_PANE, name, 2);
     }
 
     @EventHandler
     private void onInventoryClickEvent(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         if (event.getView().getTitle().contains("§x§0§0§b§3§b§6        ˚₊· Delluna   Bus  ₊·§c")) {
-            event.setCancelled(true);
 
-            if (event.getClickedInventory() == event.getView().getBottomInventory()) return;
             if (event.getCurrentItem() == null) return;
+            if (event.getCurrentItem().getItemMeta().hasCustomModelData() && event.getCurrentItem().getItemMeta().getCustomModelData() == 2){
+                event.setCancelled(true);
+                return;
+            }
 
             String name = event.getInventory().getItem(0).getItemMeta().getDisplayName();
 
@@ -60,14 +62,7 @@ public class BusIconSetGUI implements Listener {
                         player.getInventory().addItem(item);
                     }
                     player.openInventory(new BusSettingGUI().getInventory(name));
-                    return;
-                case WHITE_STAINED_GLASS_PANE:
-                    if (event.getCurrentItem().getItemMeta().hasCustomModelData() && event.getCurrentItem().getItemMeta().getCustomModelData() == 2){
-                        event.setCancelled(true);
-                        return;
-                    }
             }
-            return;
         }
     }
 
@@ -90,8 +85,6 @@ public class BusIconSetGUI implements Listener {
             BusDataFile.saveDataFile(busConfig, BusDataFile.getDataFile(npcName));
 
             player.sendMessage("변경되었습니다.");
-
-            return;
         }
     }
 }
