@@ -130,12 +130,9 @@ public class BusNameSetGUI implements Listener {
                             return;
                         }
                         player.getInventory().addItem(item);
-                        return;
                     }
-                    return;
                 }
             }
-            return;
         }
     }
 }
